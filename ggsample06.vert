@@ -31,9 +31,15 @@ void main(void)
   vec3 v = -normalize(p.xyz / p.w);                 // 視線ベクトル
   vec3 l = normalize((pl * p.w - p * pl.w).xyz);    // 光線ベクトル
   vec3 n = normalize((mg * cv).xyz);                // 法線ベクトル
+  vec3 h = normalize(v + l);
+
+  vec4 ispec = pow(max(dot(n, h), 0), kshi) * kspec * lspec;
+  vec4 idiff = max(dot(n, l), 0) * kdiff * ldiff;
+  vec4 iamb = kamb * lamb;
+  vec4 itot = iamb + idiff + ispec;
 
   //【宿題】下の１行（の右辺）を置き換えてください
-  vc = cv;
+  vc = itot;
 
   gl_Position = mc * pv;
 }
